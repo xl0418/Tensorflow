@@ -10,13 +10,13 @@ import matplotlib.pyplot as plt
 # Load the data to train
 file='C:/Liang/Code/Pro2/tf_classification/'
 # # file = '/home/p274981/abcpp/abcpp/'
-filename = file + 'tf_trait2.npy'
+filename = file + 'tf_traittree12train.npy'
 data_train = np.load(filename).item()
 
 # Load the data to test
 file='C:/Liang/Code/Pro2/tf_classification/'
 # # file = '/home/p274981/abcpp/abcpp/'
-filename_test = file + 'tf_c1_test.npy'
+filename_test = file + 'tf_traittree12test.npy'
 data_test = np.load(filename_test).item()
 
 
@@ -73,7 +73,11 @@ def plot_value_array(i, predictions_array, true_label):
 num_rows = 7
 num_cols = 7
 num_images = num_rows*num_cols
+picnum = np.linspace(0,100,10,endpoint=False)
 plt.figure(figsize=(2*num_cols, num_rows))
-for i in range(num_images):
-  plt.subplot(num_rows, num_cols, i+1)
-  plot_value_array(i, predictions, Labels_test)
+count_fig = 0
+for i in picnum:
+
+    plt.subplot(num_rows, num_cols, count_fig+1)
+    plot_value_array(int(i), predictions, Labels_test)
+    count_fig +=1
