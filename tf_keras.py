@@ -1,21 +1,19 @@
 # TensorFlow and tf.keras
 import tensorflow as tf
 from tensorflow import keras
-
+import tensorboard
 # Helper libraries
 import numpy as np
 import matplotlib.pyplot as plt
-
+from time import time
 # print(tf.__version__)
 # Load the data to train
 file='C:/Liang/Code/Pro2/tf_classification/'
-# # file = '/home/p274981/abcpp/abcpp/'
 filename = file + 'tf_tree2modelseletrain.npy'
 data_train = np.load(filename).item()
 
 # Load the data to test
 file='C:/Liang/Code/Pro2/tf_classification/'
-# # file = '/home/p274981/abcpp/abcpp/'
 filename_test = file + 'tf_tree2modelseletest.npy'
 data_test = np.load(filename_test).item()
 
@@ -36,6 +34,8 @@ model = keras.Sequential([
 model.compile(optimizer=tf.train.AdamOptimizer(),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
+writer=tf.summary.FileWriter('logs', tf.get_default_graph())
+writer.close()
 
 model.fit(Z_train_normalized, Labels_train, epochs=10)
 
@@ -70,7 +70,7 @@ def plot_value_array(i, predictions_array, true_label,classnum):
   thisplot[predicted_label].set_color('red')
   thisplot[int(true_label)].set_color('blue')
 
-num_rows = 7
+num_rows = 5
 num_cols = 5
 num_images = num_rows*num_cols
 picnum = np.linspace(0,100,10,endpoint=False)
