@@ -81,3 +81,9 @@ for i in range(num_images):
     plt.subplot(num_rows, num_cols, i+1)
     plot_value_array(i, predictions, Labels_test,classnum)
     count_fig +=1
+
+# save and load model for future prediction
+# model.save('modelclassification.h5')
+# loadmodel = keras.models.load_model('modelclassification.h5')
+# 
+# loadmodel.predict(Z_test_normalized)
