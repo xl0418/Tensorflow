@@ -85,5 +85,5 @@ for i in range(num_images):
 # save and load model for future prediction
 # model.save('modelclassification.h5')
 # loadmodel = keras.models.load_model('modelclassification.h5')
-# 
+#
 # loadmodel.predict(Z_test_normalized)
