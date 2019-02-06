@@ -10,14 +10,21 @@ size_sample = len(inputx)
 class neuralnetwork:
     learningrate=0.2
 
-    def __init__(self,num_sample,num_hidden_layer,num_output):
+    def __init__(self,num_sample,num_hidden_layer_units,num_output,num_input_feature,num_output_feature):
         self.num_sample = num_sample
-        self.num_hidden_layer = num_hidden_layer
+        self.num_hidden_layer_units = num_hidden_layer_units
         self.num_output = num_output
+        self.num_hidden_layer = len(num_hidden_layer_units)
+        weight_layer = []
+        self.units = [num_input_feature] + num_hidden_layer_units + [num_output_feature]
+        for num_layer in range(0,len(self.units)-1):
+            weight_layer.append(np.random.randn(num_hidden_layer_units[num_layer],
+                                                num_hidden_layer_units[num_layer+1]))
 
     def sigmoid(self,x):
         y = 1/(1+np.exp(-x))
         return y
+
 
     thetalayer1 = np.random.randn(size_weight,size_weight)
     thetalayer2 = np.random.randn(size_output,size_weight)
