@@ -75,20 +75,36 @@ class neuralnetwork:
                         delta = np.dot(temp_weight[:,:-1].T,delta * deriv_sigmoid)
                         deriv_sigmoid = sample_a[sample_iter][backward_layer] *\
                                  (1 - sample_a[sample_iter][backward_layer])
-        return sample_a
-        self.learningspeed = {'error':error,'iteration':iteration}
+        self.learningspeed = {'error': error, 'iteration': iteration}
         self.lsdf = pd.DataFrame(self.learningspeed)
+        return sample_a, self.weight_layer
+
+    # predict
+    def predict(self,input,weight):
+        out = input+[1]
+        for i in range(len(weight)):
+            out = np.dot(weight[i],np.array(out))
+            out = self.sigmoid(out)
+            out = np.concatenate((out,[1]))
+        return out[:-1]
 
 
+# test
 inputx = np.array(([0.2, 0.5, 0.5,0.3], [0.1, 0.2, 0.15,0.1],[0.7,0.9,0.4,0.8]))
 outputy = np.array(([0.5, 0.4], [0.9, 0.1],[0.3,0.5]))
 
+# build the neural network
 nn=neuralnetwork(num_sample=inputx.shape[0],num_hidden_layer_units=[15,14,15,16],num_input_feature=inputx.shape[1],
              num_output_feature=outputy.shape[1], bias=[0.1,0.2,0.3,0.4,0.4],learningrate=0.2)
 
-
+# set the accuracy and the iteration limit
 acc = 1e-7
 iter = 20000
-out_a = nn.train(inputx,outputy,accuracy = acc,iteration_limit=iter)
+# train the neural network
+out_a,weight = nn.train(inputx,outputy,accuracy = acc,iteration_limit=iter)
+# plot the learning process
+nn.lsdf.plot(x='iteration',y='error')
 
-# nn.lsdf.plot(x='iteration',y='error')
+# predict
+input = [0.19, 0.51, 0.49,0.29]
+out = nn.predict(input,weight)
