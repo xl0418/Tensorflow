@@ -90,7 +90,7 @@ for row in range(num_rows):
         # axes[i].set_xticks([])
         # axes[i].set_yticks([])
         predicted_label = np.argmax(predictions[count_fig])
-        axes[row,col].bar(range(classnum), predictions[count_fig], color="blue")
+        axes[row,col].bar(range(classnum), predictions[count_fig], color="grey")
         axes[row,col].set_ylim([0, 1])
         axes[row,col].set_yticks([])
         axes[row,col].set_yticklabels([])
@@ -104,3 +104,17 @@ for row in range(num_rows):
 fig.text(0.5, 0.04, 'Models', ha='center', fontsize=15)
 fig.text(0.04, 0.5, 'Probability', va='center', rotation='vertical', fontsize=15)
 fig.suptitle('Model classification via machine learning')
+
+
+# single plot of prediction
+num = 190
+Labels_test = test_label_model
+
+predicted_label = np.argmax(predictions[num])
+barplot = plt.bar(range(classnum), predictions[num],color = 'grey')
+barplot.get_children()[predicted_label].set_color('red')
+barplot.get_children()[int(Labels_test[num])].set_color('blue')
+plt.xticks(xticks,xticklabels)
+plt.xlabel("Models")
+plt.ylabel("Probability")
+plt.title("Prediction")
