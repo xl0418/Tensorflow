@@ -131,6 +131,53 @@ con = tf.cond(tf.greater(sub,0.),lambda:positive_result,lambda:negative_result)
 
 print(sess.run(con))
 
+
+""" Starter code for simple logistic regression model for MNIST
+with tf.data module
+MNIST dataset: yann.lecun.com/exdb/mnist/
+Linear regression
+"""
+import tensorflow as tf
+
+import utils
+
+DATA_FILE = "data/birth_life_2010.txt"
+
+# Step 1: read in data from the .txt file
+# data is a numpy array of shape (190, 2), each row is a datapoint
+data, n_samples = utils.read_birth_life_data(DATA_FILE)
+
+# Step 2: create placeholders for X (birth rate) and Y (life expectancy)
+X = tf.placeholder(tf.float32, name='X')
+Y = tf.placeholder(tf.float32, name='Y')
+
+# Step 3: create weight and bias, initialized to 0
+w = tf.get_variable('weights', initializer=tf.constant(0.0))
+b = tf.get_variable('bias', initializer=tf.constant(0.0))
+
+# Step 4: construct model to predict Y (life expectancy from birth rate)
+Y_predicted = w * X + b
+
+# Step 5: use the square error as the loss function
+loss = tf.square(Y - Y_predicted, name='loss')
+
+# Step 6: using gradient descent with learning rate of 0.01 to minimize loss
+optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001).minimize(loss)
+
+with tf.Session() as sess:
+    # Step 7: initialize the necessary variables, in this case, w and b
+    sess.run(tf.global_variables_initializer())
+
+    # Step 8: train the model
+    for i in range(100):  # run 100 epochs
+        for x, y in data:
+            # Session runs train_op to minimize loss
+            sess.run(optimizer, feed_dict={X: x, Y: y})
+
+        # Step 9: output the values of w and b
+    w_out, b_out = sess.run([w, b])
+
+
 """ Starter code for simple logistic regression model for MNIST
 with tf.data module
 MNIST dataset: yann.lecun.com/exdb/mnist/
@@ -167,12 +214,28 @@ train_data = tf.data.Dataset.from_tensor_slices(train)
 train_data = train_data.shuffle(10000)  # if you want to shuffle your data
 train_data = train_data.batch(batch_size)
 
+
+# dataset = tf.data.Dataset.from_tensor_slices(np.array([1.0, 2.0, 3.0, 4.0, 5.0]))
+# dataset = dataset.map(lambda x: x + 1) # 2.0, 3.0, 4.0, 5.0, 6.0
+# dataset = dataset.shuffle(100)
+# dataset = dataset.batch(5)
+# dataset = dataset.repeat(2)
+# iterator = dataset.make_one_shot_iterator()
+# one_element = iterator.get_next()
+# with tf.Session() as sess:
+#     try:
+#         while True:
+#             print(sess.run(one_element))
+#     except tf.errors.OutOfRangeError:
+#         print("end!")
+
 # create testing Dataset and batch it
-test_data = None
+test_data = tf.data.Dataset.from_tensor_slices(test)
+test_data = test_data.shuffle(10000)  # if you want to shuffle your data
+test_data = test_data.batch(batch_size)
 #############################
 ########## TO DO ############
 #############################
-
 
 # create one iterator and initialize it with different datasets
 iterator = tf.data.Iterator.from_structure(train_data.output_types,
@@ -187,7 +250,9 @@ test_init = iterator.make_initializer(test_data)  # initializer for train_data
 # b is initialized to 0
 # shape of w depends on the dimension of X and Y so that Y = tf.matmul(X, w)
 # shape of b depends on Y
-w, b = None, None
+w = tf.get_variable(name='weights', shape=(784, 10), initializer=tf.random_normal_initializer())
+b = tf.get_variable(name='bias', shape=(1, 10), initializer=tf.zeros_initializer())
+
 #############################
 ########## TO DO ############
 #############################
@@ -196,7 +261,7 @@ w, b = None, None
 # Step 4: build model
 # the model that returns the logits.
 # this logits will be later passed through softmax layer
-logits = None
+logits = tf.matmul(img, w) + b
 #############################
 ########## TO DO ############
 #############################
@@ -204,7 +269,8 @@ logits = None
 
 # Step 5: define loss function
 # use cross entropy of softmax of logits as the loss function
-loss = None
+entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=label, name='loss')
+loss = tf.reduce_mean(entropy)
 #############################
 ########## TO DO ############
 #############################
@@ -212,7 +278,7 @@ loss = None
 
 # Step 6: define optimizer
 # using Adamn Optimizer with pre-defined learning rate to minimize loss
-optimizer = None
+optimizer = tf.train.AdamOptimizer(learning_rate).minimize(loss)
 #############################
 ########## TO DO ############
 #############################

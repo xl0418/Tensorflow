@@ -5,3 +5,4 @@
 venv/
 *.gz
 .idea/*.xml
+graphs/logreg/events.out.tfevents.1551177074.DESKTOP-9RU5643
