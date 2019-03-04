@@ -98,7 +98,7 @@ for row in range(num_rows):
         axes[row,col].set_xticklabels(xticklabels)
 
         axes[row,col].get_children()[predicted_label].set_color('red')
-        axes[row,col].get_children()[int(Labels_test[count_fig])].set_color('blue')
+        axes[row,col].get_children()[int(Labels_test[count_fig])].set_color('green')
         count_fig +=1
 
 fig.text(0.5, 0.04, 'Models', ha='center', fontsize=15)
@@ -113,7 +113,7 @@ Labels_test = test_label_model
 predicted_label = np.argmax(predictions[num])
 barplot = plt.bar(range(classnum), predictions[num],color = 'grey')
 barplot.get_children()[predicted_label].set_color('red')
-barplot.get_children()[int(Labels_test[num])].set_color('blue')
+barplot.get_children()[int(Labels_test[num])].set_color('green')
 plt.xticks(xticks,xticklabels)
 plt.xlabel("Models")
 plt.ylabel("Probability")
